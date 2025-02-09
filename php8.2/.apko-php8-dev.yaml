@@ -1,0 +1,101 @@
+contents:
+  repositories:
+    - https://dl-cdn.alpinelinux.org/alpine/edge/main
+    - https://dl-cdn.alpinelinux.org/alpine/edge/community
+  packages:
+    - ca-certificates-bundle
+    - alpine-baselayout-data
+    - busybox
+    - ssl_client
+    - nginx
+    - php8
+    - php8-intl
+    - php8-xml
+    - php8-xsl
+    - php8-pecl-amqp
+    - php8-gd
+    - php8-openssl
+    - php8-sodium
+    - php8-curl
+    - php8-zip
+    - php8-pdo_mysql
+    - php8-bcmath
+    - php8-bz2
+    - php8-exif
+    - php8-mysqli
+    - php8-fpm
+    - php8-ctype
+    - php8-tokenizer
+    - php8-session
+# APCu || OPCache : OPCache by default
+#    - php8-pecl-apcu
+    - php8-opcache
+    - php8-pecl-xdebug
+    - php8-fileinfo
+    - php8-simplexml
+
+entrypoint:
+  type: service-bundle
+  services:
+    nginx: /usr/bin/nginx -c /etc/nginx/nginx.conf -g "daemon off;"
+    php-fpm: /usr/sbin/php-fpm8 -F -R
+
+accounts:
+  groups:
+    - groupname: www-data
+      gid: 1000
+  users:
+    - username: www-data
+      uid: 1000
+  run-as: www-data
+
+environment:
+  PATH: /usr/sbin:/sbin:/usr/bin:/bin
+
+paths:
+  - path: /usr/bin/nginx
+    source: /usr/sbin/nginx
+    uid: 1000
+    gid: 1000
+    type: hardlink
+    permissions: 0o755
+  - path: /var/log/nginx
+    type: directory
+    uid: 1000
+    gid: 1000
+    permissions: 0o755
+  - path: /var/lib/nginx
+    type: directory
+    uid: 1000
+    gid: 1000
+    permissions: 0o750
+  - path: /var/lib/nginx/tmp/
+    type: directory
+    uid: 1000
+    gid: 1000
+    permissions: 0o750
+  - path: /var/lib/nginx/tmp/client_body
+    type: directory
+    uid: 1000
+    gid: 1000
+    permissions: 0o750
+  - path: /run/nginx
+    type: directory
+    uid: 1000
+    gid: 1000
+    permissions: 0o755
+  - path: /etc/nginx/http.d/default.conf
+    type: hardlink
+    source: /usr/share/nginx/http-default_server.conf
+    uid: 1000
+    gid: 1000
+    permissions: 0o644
+  - path: /var/log/php8
+    type: directory
+    uid: 1000
+    gid: 1000
+    permissions: 0o755
+
+archs:
+  - arm64
+  - amd64

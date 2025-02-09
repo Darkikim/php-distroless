@@ -1,0 +1,51 @@
+contents:
+  repositories:
+    - https://dl-cdn.alpinelinux.org/alpine/edge/main
+    - https://dl-cdn.alpinelinux.org/alpine/edge/community
+  packages:
+    - ca-certificates-bundle
+    - alpine-baselayout-data
+    - php8
+    - php8-intl
+    - php8-xml
+    - php8-xsl
+    - php8-pecl-amqp
+    - php8-gd
+    - php8-openssl
+    - php8-sodium
+    - php8-curl
+    - php8-zip
+    - php8-pdo_mysql
+    - php8-bcmath
+    - php8-bz2
+    - php8-exif
+    - php8-mysqli
+    - php8-ctype
+    - php8-tokenizer
+    - php8-session
+# APCu || OPCache : OPCache by default
+#    - php8-pecl-apcu
+    - php8-opcache
+    - php8-fileinfo
+    - php8-simplexml
+
+entrypoint:
+  type: service-bundle
+  services:
+    php: /usr/bin/php8
+
+accounts:
+  groups:
+    - groupname: www-data
+      gid: 1000
+  users:
+    - username: www-data
+      uid: 1000
+  run-as: www-data
+
+environment:
+  PATH: /usr/sbin:/sbin:/usr/bin:/bin
+
+archs:
+  - arm64
+  - amd64
